@@ -99,7 +99,7 @@ const displayLevelWords = (words) => {
         const wordDiv = document.createElement('div')
 
         wordDiv.innerHTML = `
-          <div class="py-14 px-12 text-center bg-white rounded-md shadow-lg space-y-5">
+          <div class="h-full py-14 px-12 text-center bg-white rounded-md shadow-lg space-y-5">
                 <h2 class="text-3xl font-bold">${word.word ? word.word : "No woerd founded"}</h2>
                 <p class="text-xl font-medium">Meaning /Pronounciation</p>
                 <h2 class="font-bangla text-3xl font-semibold">"${word.meaning ? word.meaning : "No meaning found"} / ${word.pronunciation ? word.pronunciation : "no pronounch found"}"</h2>
@@ -128,10 +128,27 @@ const displayLesson = (lessons) => {
         <button id="lesson-btn-${lesson.level_no}" onclick="loadLevelWord(${lesson.level_no})" class="btn btn-outline btn-primary lession-btn">
             <i class="fa-solid fa-book-open"></i> Lesson - ${lesson.level_no}
         </button>
-        
         `
         levelsContaienr.appendChild(btnDiv)
     });
 }
+
+
+document.getElementById('search-btn').addEventListener('click',(event) => {
+    const input = document.getElementById('search-input');
+    const  inputvalue = input.value.trim().toLowerCase()
+    console.log(inputvalue)
+
+    fetch('https://openapi.programming-hero.com/api/words/all')
+    .then(res => res.json())
+    .then(data => {
+        const allWords = data.data
+        console.log(allWords)
+        const filterMatchWords = allWords.filter(word => word.word.toLowerCase().includes(inputvalue))
+        displayLevelWords(filterMatchWords)
+        console.log(filterMatchWords)
+        removeActiv()
+    })
+})
 
 loadLessons()
